@@ -179,7 +179,3 @@ RUN npm run build
 EXPOSE 5000
 CMD ["npm", "start"]
 ```
-
-## 📞 Support
-
-For support, contact the development team or create an issue in the repository.
