@@ -196,7 +196,3 @@ The frontend is built as a static site and can be deployed to:
 - **React Router**: Client-side routing
 - **ESLint**: Code quality and style enforcement
 - **Prettier**: Code formatting
-
-## 📞 Support
-
-For support, contact the development team or create an issue in the repository.
