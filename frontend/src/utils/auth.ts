@@ -1,0 +1,26 @@
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  userId: string;
+  email: string;
+  role: 'ADMIN' | 'MANAGER' | 'STAFF';
+  exp: number;
+  iat: number;
+}
+
+export const decodeToken = (token: string): JwtPayload | null => {
+  try {
+    return jwtDecode<JwtPayload>(token);
+  } catch (error) {
+    console.error('Failed to decode token:', error);
+    return null;
+  }
+};
+
+export const isTokenExpired = (token: string): boolean => {
+  const decoded = decodeToken(token);
+  if (!decoded) return true;
+  
+  const currentTime = Date.now() / 1000;
+  return decoded.exp < currentTime;
+};

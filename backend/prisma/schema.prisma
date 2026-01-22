@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STAFF)
+  status    Status   @default(ACTIVE)
+  invitedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  createdProjects Project[]
+  sentInvites     Invite[]
+
+  @@map("users")
+}
+
+model Invite {
+  id         String   @id @default(uuid())
+  email      String
+  role       Role
+  token      String   @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Foreign keys
+  invitedById String
+  invitedBy   User     @relation(fields: [invitedById], references: [id], onDelete: Restrict)
+
+  @@map("invites")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Foreign keys
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+
+  @@map("projects")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
